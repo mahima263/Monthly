@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.A.G.I.K. - Monthly Giving Program</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/IITK_logo.png" alt="Logo">
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#">Home</a></li>
+            <li><a href="#magik-about">About</a></li>
+            <li><a href="#team">Testimonials</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <div class="hamburger" onclick="toggleMenu()">
+            ☰
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="left-space"></div>
+
+        <!-- RIGHT FORM -->
+        <section class="form-section">
+            <!-- Donation Form -->
+            <div class="donation-form-container">
+                <!-- Tab Navigation -->
+                <div class="form-tabs">
+                    <div class="tab active" data-step="1">Your gift</div>
+                    <div class="tab" data-step="2">Your details</div>
+                </div>
+
+                <!-- Step 1: Donation Impact -->
+                <div id="step1" class="form-step active">
+                    <div class="step-header">
+                        <h2>Choose Your Impact</h2>
+                        <p>Select how your donation will help students over time</p>
+                    </div>
+
+                    <div class="donation-options">
+                        <div class="donation-option" data-amount="500"
+                            data-description="Provides a cycle for student mobility">
+                            <img src="https://cdn-icons-png.flaticon.com/128/2972/2972185.png" alt="Cycle"
+                                class="option-icon">
+                            <div class="option-impact">Provides a cycle for student mobility</div>
+                            <div class="option-amount">₹500</div>
+                        </div>
+
+                        <div class="donation-option" data-amount="1000"
+                            data-description="Covers medical & wellness needs for students">
+                            <img src="https://cdn-icons-png.flaticon.com/128/2966/2966487.png" alt="Medical"
+                                class="option-icon">
+                            <div class="option-impact">Covers medical & wellness needs for students</div>
+                            <div class="option-amount">₹1,000</div>
+                        </div>
+
+                        <div class="donation-option" data-amount="2500"
+                            data-description="Pays hostel/mess fees or supports a laptop">
+                            <img src="https://cdn-icons-png.flaticon.com/128/2721/2721290.png" alt="Laptop"
+                                class="option-icon">
+                            <div class="option-impact">Pays hostel/mess fees or supports a laptop</div>
+                            <div class="option-amount">₹2,500</div>
+                        </div>
+
+                        <div class="donation-option" data-amount="5000"
+                            data-description="Enables competitions or sports participation">
+                            <img src="https://cdn-icons-png.flaticon.com/128/857/857455.png" alt="Sports"
+                                class="option-icon">
+                            <div class="option-impact">Enables competitions or sports participation</div>
+                            <div class="option-amount">₹5,000</div>
+                        </div>
+
+                        <div class="donation-option" data-amount="10000"
+                            data-description="Funds research or travel grants">
+                            <img src="https://cdn-icons-png.flaticon.com/128/684/684809.png" alt="Research"
+                                class="option-icon">
+                            <div class="option-impact">Funds research or travel grants</div>
+                            <div class="option-amount">₹10,000</div>
+                        </div>
+
+                        <div class="donation-option other-option" id="other-option" data-amount="other"
+                            data-description="Your custom amount will support student needs based on urgency">
+                            <img src="https://cdn-icons-png.flaticon.com/128/1828/1828919.png" alt="Other"
+                                class="option-icon">
+                            <div class="option-impact">Enter your own amount</div>
+                            <div class="option-amount">Other</div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Amount Input -->
+                    <div class="custom-amount-container" id="customAmountContainer">
+                        <label class="custom-amount-label">Enter your custom amount:</label>
+                        <div class="custom-amount-input">
+                            <span class="currency-symbol">₹</span>
+                            <input type="number" id="customAmountInput" placeholder="Enter amount" min="1">
+                        </div>
+                    </div>
+
+                    <!-- Impact Display -->
+                    <!-- <div class="impact-display">
+                        <div class="impact-content">
+                            <div class="impact-amount" id="impact-amount">Select an amount</div>
+                            <div class="impact-description" id="impact-description">to see how your donation helps</div>
+                            <div class="impact-details" id="impact-details"></div>
+                        </div>
+                    </div> -->
+
+                    <!-- Country Selection -->
+                    <div class="country-select-container">
+                        <h3 class="text-center">Select Country</h3>
+                        <div class="dropdown country-dropdown">
+                            <div class="dropdown-selected">Choose Country</div>
+                            <div class="dropdown-options">
+                                <div class="option" data-value="india">🇮🇳 India</div>
+                                <div class="option" data-value="usa">🇺🇸 United States</div>
+                                <div class="option" data-value="australia">🇦🇺 Australia</div>
+                                <div class="option" data-value="uk">🇬🇧 United Kingdom</div>
+                                <div class="option" data-value="canada">🇨🇦 Canada</div>
+                                <div class="option" data-value="germany">🇩🇪 Germany</div>
+                                <div class="option" data-value="belgium">🇧🇪 Belgium</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-note">
+                        <strong>Note:</strong> These amounts reflect the most common needs of students. Your donation
+                        will go towards supporting their most urgent requirements.
+                    </div>
+
+                    <div class="form-actions" style="display:flex; justify-content:center; margin-top:20px;">
+                        <button class="btn btn-next" id="nextButton" style="padding:15px 40px; font-size:18px;">
+                            Next →
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <!-- Step 2: Personal Details -->
+                <div id="step2" class="form-step">
+                    <div class="step-header">
+                        <h2>Your Information</h2>
+                        <p>Please provide your details to complete the donation</p>
+                    </div>
+
+                    <!-- Updated Donation Form: Labels Removed & Asterisks Added in Placeholders -->
+                    <form id="donationForm">
+                        <!-- Personal Information -->
+                        <div class="form-group">
+                            <div class="section-title">Personal Information</div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" name="name" placeholder="Full Name *" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" name="email" placeholder="Email *" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="Mobile Number *"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="pannumber" id="panInput" maxlength="10"
+                                        placeholder="PAN Number (Optional)" style="text-transform: uppercase">
+                                    <div class="pan-note" id="panNote">Note: Enter PAN (mandatory) to receive the 80G
+                                        certificate.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alumni Information -->
+                        <div class="form-group">
+                            <!-- Affiliation Dropdown -->
+                            <div class="dropdown affiliation-dropdown">
+                                <div class="dropdown-selected">Affiliation *</div>
+                                <div class="dropdown-options">
+                                    <div class="option" data-value="alumni">Alumni</div>
+                                    <div class="option" data-value="non-alumni">Non-Alumni</div>
+                                    <div class="option" data-value="organization">Organization</div>
+                                </div>
+                            </div>
+
+                            <div id="alumniFields" class="conditional-field">
+                                <div class="form-row mt-4">
+                                    <!-- Program Dropdown -->
+                                    <div class="dropdown program-dropdown">
+                                        <div class="dropdown-selected">Select Program *</div>
+                                        <div class="dropdown-options">
+                                            <div class="option" data-value="B.TECH">B.TECH</div>
+                                            <div class="option" data-value="M.TECH">M.TECH</div>
+                                            <div class="option" data-value="Ph.D">Ph.D</div>
+                                            <div class="option" data-value="MBA">MBA</div>
+                                            <div class="option" data-value="M.Sc">M.Sc</div>
+                                            <div class="option" data-value="B.Sc">B.Sc</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Department Dropdown -->
+                                    <div class="dropdown department-dropdown">
+                                        <div class="dropdown-selected">Select Department *</div>
+                                        <div class="dropdown-options">
+                                            <!-- Department List -->
+                                            <div class="option">Aerospace Engineering</div>
+                                            <div class="option">Biological Sciences and Bio Engg</div>
+                                            <div class="option">Civil Engineering</div>
+                                            <div class="option">Chemistry</div>
+                                            <div class="option">Cognitive Science</div>
+                                            <div class="option">Chemical Engineering</div>
+                                            <div class="option">Computer Science & Engineering</div>
+                                            <div class="option">Design Programme</div>
+                                            <div class="option">Earth Sciences</div>
+                                            <div class="option">Economic Sciences</div>
+                                            <div class="option">Electrical Engineering</div>
+                                            <div class="option">Environmental Engineering</div>
+                                            <div class="option">Geological Technology</div>
+                                            <div class="option">Humanities & Social Sciences</div>
+                                            <div class="option">Industrial & Management Engg</div>
+                                            <div class="option">Laser Technology</div>
+                                            <div class="option">Materials Science & Engineering</div>
+                                            <div class="option">Materials and Metallurgical Engineering</div>
+                                            <div class="option">Materials Science Programme</div>
+                                            <div class="option">Mathematics</div>
+                                            <div class="option">Mathematics and Statistics</div>
+                                            <div class="option">Master's in Design</div>
+                                            <div class="option">Mechanical Engineering</div>
+                                            <div class="option">Nuclear Engg. & Technology</div>
+                                            <div class="option">Physics</div>
+                                            <div class="option">Photonics Science and Engineering Programme</div>
+                                            <div class="option">Statistics</div>
+                                            <div class="option">Space Science and Astronomy</div>
+                                            <div class="option">Sustainable Energy Engineering</div>
+                                            <div class="option">Accounting</div>
+                                            <div class="option">Finance</div>
+                                            <div class="option">Computing</div>
+                                            <div class="option">Business Communication</div>
+                                            <div class="option">Marketing</div>
+                                            <div class="option">Economics</div>
+                                            <div class="option">Business Statistics</div>
+                                            <div class="option">Organizational Behavior & HRM</div>
+
+                                            <!-- E-Masters -->
+                                            <div class="option">E-Masters in Next Generation Wireless Technologies</div>
+                                            <div class="option">E-Masters in Business Finance</div>
+                                            <div class="option">E-Masters in Financial Technology and Management</div>
+                                            <div class="option">E-Masters in Public Policy</div>
+                                            <div class="option">E-Masters in Data Science and Business Analytics</div>
+                                            <div class="option">E-Masters in Cyber Security</div>
+                                            <div class="option">E-Masters in Artificial Intelligence and Machine
+                                                Learning</div>
+                                            <div class="option">E-Masters in Climate Finance and Sustainability</div>
+                                            <div class="option">E-Masters in Quantitative Finance and Risk Management
+                                            </div>
+                                            <div class="option">E-Masters in Sustainable Construction Practices and
+                                                Project Management</div>
+                                            <div class="option">E-Masters in Business Leadership in the Digital Age
+                                            </div>
+                                            <div class="option">E-Masters in Financial Analysis</div>
+                                            <div class="option">E-Masters in Power Sector Regulation, Economics and
+                                                Finance</div>
+                                            <div class="option">E-Masters in Renewable Energy and e-Mobility</div>
+
+                                            <div class="option">Others</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row mt-4">
+                                    <!-- Year of Graduation Dropdown -->
+                                    <div class="dropdown yog-dropdown">
+                                        <div class="dropdown-selected">Year of Graduation *</div>
+                                        <div class="dropdown-options" id="yog-options">
+                                            <!-- Options will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Roll Number -->
+                                    <div class="form-group">
+                                        <input type="text" name="roll_no" placeholder="Roll Number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Receipt Preferences -->
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="required">Mark this donation as Anonymous?</label>
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="anonymous" value="Yes">
+                                        <span class="radio-label">Yes</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="anonymous" value="No" checked>
+                                        <span class="radio-label">No</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-prev" onclick="switchTab(1)">← Previous</button>
+                            <button type="submit" class="btn btn-submit"
+                            style="padding:15px 40px; font-size:18px; border-radius:8px;">
+                        Pay Now
+                    </button>                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Donate Now Buttons -->
+    <button class="donate-now-btn desktop-donate-btn" id="desktopDonateBtn">Donate Now</button>
+    <button class="mobile-donate-btn" id="mobileDonateBtn">Donate Now</button>
+    
+    <!---------------About-->
+    <section id="magik-about" class="magik-section mb-4">
+        <div class="container">
+            <h2 class="magik-title">What is <span>M.A.G.I.K.?</span></h2>
+
+            <p class="magik-text">
+                Welcome to M.A.G.I.K., the monthly giving program for IIT Kanpur alumni. Through M.A.G.I.K., alumni have
+                an opportunity
+                to support their alma mater on a regular basis. This voluntary effort aims to benefit future students
+                and enhance the
+                overall impact of the institution.
+            </p>
+
+            <p class="magik-text">
+                Join us in making a difference today. Let's empower a generation of innovators at IIT Kanpur through
+                consistent monthly giving.
+            </p>
+        </div>
+    </section>
+    <!--------end about-->
+    
+    <section id="team" class="team section bg-white">
+        <div class="container section-title text-center mt-4" style="padding-bottom:0px;">
+            <h2 style="
+    font-family: 'Raleway', sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.4;
+    margin: 40px 0;
+">
+    <i>
+        <span style="color:#B04B34;">Small</span> 
+        <span style="color:#000;">regular contributions</span>
+        <span style="color:#B04B34;"> today,</span>
+        <br>
+        <span style="color:#B04B34;">create a</span> 
+        <span style="color:#000;">big impact</span> 
+        <span style="color:#B04B34;">tomorrow!</span>
+    </i>
+</h2>
+        </div>
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-12 col-md-12 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-member-1">
+                        <div class="member-img">
+                            <img src="images/monthly-1 (1).png" class="img-fluid" alt="">
+                        </div>
+                    </div>
+                </div><!-- End Team Member -->
+                <div class="col-lg-12 col-md-12 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-member-1">
+                        <div class="member-img">
+                            <img src="images/monthly-2.jpeg" class="img-fluid" alt="">
+                        </div>
+                    </div>
+                </div>
+                <p style="
+  text-align:center;
+  background:#f8e6e2;
+  color:#B04B34;
+  padding:12px 18px;
+  border-left:5px solid #B04B34;
+  display:inline-block;
+  font-weight:600;
+  border-radius:6px;
+  font-size:1rem;
+">
+  PLEASE NOTE : The amount mentioned above is for illustrative purposes only 
+  and does not include the interest that will accumulate over the years.
+</p>
+            </div>
+        </div>
+    </section>
+    
+    <!----------------Six reasons-->
+    <section class="reasons-section">
+        <div class="container">
+            <h2 class="reasons-title">
+                Six Reasons to <span>Give Monthly</span>
+            </h2>
+    
+            <div class="reasons-grid">
+                <!-- Card 1 -->
+                <div class="reason-card">
+                    <img src="images/sustained.png" class="reason-icon">
+                    <div>
+                        <h3>Sustained Impact</h3>
+                        <p>
+                            Your monthly contributions give consistent support for ongoing initiatives at IITK.
+                        </p>
+                    </div>
+                </div>
+    
+                <!-- Card 2 -->
+                <div class="reason-card">
+                    <img src="images/convenience.png" class="reason-icon">
+                    <div>
+                        <h3>Convenience</h3>
+                        <p>
+                            Set up your donation once and let it run automatically, saving you time and effort.
+                        </p>
+                    </div>
+                </div>
+    
+                <!-- Card 3 -->
+                <div class="reason-card">
+                    <img src="images/legacy-24.png" class="reason-icon">
+                    <div>
+                        <h3>Build a Legacy</h3>
+                        <p>
+                            Contribute to a fund that creates lasting benefits for IITK students and the community.
+                        </p>
+                    </div>
+                </div>
+    
+                <!-- Card 4 -->
+                <div class="reason-card">
+                    <img src="images/flexibility.png" class="reason-icon">
+                    <div>
+                        <h3>Flexibility</h3>
+                        <p>
+                            Adjust your contribution amount or cancel anytime, giving you full control over your giving.
+                        </p>
+                    </div>
+                </div>
+    
+                <!-- Card 5 -->
+                <div class="reason-card">
+                    <img src="images/tax.png" class="reason-icon">
+                    <div>
+                        <h3>Tax Benefits</h3>
+                        <p>
+                            Get 100% tax benefits for your monthly contributions.
+                        </p>
+                    </div>
+                </div>
+    
+                <!-- Card 6 -->
+                <div class="reason-card">
+                    <img src="images/updates.png" class="reason-icon">
+                    <div>
+                        <h3>Exclusive Updates</h3>
+                        <p>
+                            Receive regular updates and stay connected to IITK.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-----------Testimonials-->
+    <div id="test" class="testimonial-slider">
+        <h2 class="testimonial-title">
+           The spirit of <span>Giving Back</span>
+        </h2>
+        <div class="slides">
+            <!-- Slide 1 -->
+            <div class="slide">
+                <div class="card">
+                    <img src="images/hemant-jalan-24.jpeg" class="profile">
+                    <h2>Mr. Hemant Jalan</h2>
+                    <p class="sub">(BT/CHE/1977)</p>
+                    <p class="quote">
+                        "Whenever any of us is in a financial position to give back to the Institute, I think, he ought to because we owe that to the Institute that has given us so much."
+                    </p>
+                </div>
+            </div>
+    
+            <!-- Slide 2 -->
+            <div class="slide">
+                <div class="card">
+                    <img src="images/gopal-sutwala-24.jpeg" class="profile">
+                    <h2>Mr. Gopal Sutwala</h2>
+                    <p class="sub">(BT/CHE/1973)</p>
+                    <p class="quote">
+                        "I just wanted to give money for the treatment of the poor. I am happy that such a project (The Gangwal School of Medical Science & Technology) is coming up here (in IIT Kanpur) and it needs to be supported in any case. So, I am thankful."
+                    </p>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Navigation buttons -->
+        <button class="prev" onclick="moveSlide(-1)">❮</button>
+        <button class="next" onclick="moveSlide(1)">❯</button>
+    </div>
+    
+    <!------------FAQS-->
+    <section id="faq">
+        <div class="container">
+            <h2 class="faq-title">
+                Frequently Asked Questions
+            </h2>
+    
+            <div class="faq-grid">
+                <!-- LEFT COLUMN -->
+                <div class="faq-col">
+                    <!-- ITEM -->
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            How do I make a monthly donation?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            To set up a recurring donation, visit the MAGIK page and click "Donate".
+                            Select "Recurring", choose the amount & frequency, then verify your bank details.
+                        </div>
+                    </div>
+    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            How can I update my credit card details if my card is expired?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            You will need to reactivate your recurring donation with new card details.
+                        </div>
+                    </div>
+    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Where does my money go?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Your donations support scholarships, research, infrastructure, and student programs at IIT Kanpur.
+                        </div>
+                    </div>
+    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            When will my donation be deducted?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Your donation is deducted monthly on the same date you initiated the recurring payment.
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- RIGHT COLUMN -->
+                <div class="faq-col">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            What are the tax benefits and when can I get my receipt?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Donations are 100% tax-deductible. Indian receipts are issued in April; US receipts in January.
+                        </div>
+                    </div>
+    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            When will my name be reflected on the wall of donors?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            After your payment is received in our account (usually 4–5 working days).
+                        </div>
+                    </div>
+    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            How can I cancel my donation?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Indian donors can cancel via bank net banking (subscriptions section).
+                            US donors can cancel via the Zeffy link.
+                        </div>
+                    </div>
+    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Can I get one combined receipt for all my donations this year?
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            Monthly donors receive a cumulative annual receipt. One-time donations have individual receipts only.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="contact-note">
+        <p>
+            NOTE : For more questions related to your donations, please reach out to: dora_desk@iitk.ac.in
+        </p>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
