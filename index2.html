@@ -83,7 +83,7 @@
             background-color: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid #e0e0e0;
+                            border: 1px solid #e0e0e0;
         }
 
         .payment-steps h4 {
@@ -137,43 +137,45 @@
             text-decoration: none;
         }
 
-        /* Selected Amount Display Styles - Improved Look & Feel */
+        /* Selected Amount Display Styles - Now in same position as custom amount */
         .selected-amount-display {
             display: none;
-            background: linear-gradient(135deg, #f8e6e2 0%, #ffefeb 100%);
+            background-color: #f8e6e2;
             padding: 5px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin: 20px 0;
-            border: 2px solid #B04B34;
-            box-shadow: 0 4px 15px rgba(176, 75, 52, 0.1);
+            border-left: 4px solid #B04B34;
+            text-align: center;
         }
 
         .selected-amount-display.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            animation: fadeIn 0.3s ease-in-out;
+            display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .selected-amount-title {
+            font-size: 18px;
+            color: #B04B34;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .selected-amount-value {
-            font-size: 26px;
-            font-weight: 600;
-            color: #B04B34;
-            margin: 0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin: 10px 0;
         }
 
         .selected-amount-frequency {
-            font-size: 22px;
-            color: #8c3a2a;
-            margin: 0;
-            font-weight: 600;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .selected-amount-note {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
         }
 
         /* Custom Amount Container Styles */
@@ -184,7 +186,6 @@
 
         .custom-amount-container.show {
             display: block;
-            animation: fadeIn 0.3s ease-in-out;
         }
 
         .custom-amount-label {
@@ -192,63 +193,38 @@
             margin-bottom: 10px;
             font-weight: 600;
             color: #333;
-            font-size: 16px;
         }
 
         .custom-amount-input {
             display: flex;
             align-items: center;
             border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 5px;
-            transition: all 0.3s;
-            background: white;
-            position: relative;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            transition: border-color 0.3s;
         }
 
         .custom-amount-input:focus-within {
             border-color: #B04B34;
-            box-shadow: 0 2px 15px rgba(176, 75, 52, 0.15);
-            transform: translateY(-2px);
         }
 
         .currency-symbol {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 600;
             color: #B04B34;
-            margin-right: 12px;
+            margin-right: 10px;
         }
 
         #customAmountInput {
             flex: 1;
             border: none;
             outline: none;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 500;
-            padding-right: 90px;
-            color: #333;
         }
 
         #customAmountInput::placeholder {
-            color: #aaa;
-        }
-
-        .per-month-indicator {
-            position: absolute;
-            right: 20px;
-            color: #888;
-            font-size: 16px;
-            pointer-events: none;
-            font-weight: 500;
-        }
-
-        /* Donation Option Selection Styles */
-        .donation-option.selected {
-            border-color: #B04B34;
-            background-color: #f8e6e2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(176, 75, 52, 0.15);
+            color: #999;
         }
     </style>
 </head>
@@ -365,7 +341,7 @@
                     <!-- Fixed Amount Display (appears when fixed amounts are selected) -->
                     <div class="selected-amount-display" id="selectedAmountDisplay">
                         <div class="selected-amount-value" id="selectedAmountValue">₹500</div>
-                        <div class="selected-amount-frequency">/ month</div>
+                        <div class="selected-amount-frequency">per month</div>
                     </div>
 
                     <!-- Custom Amount Input -->
@@ -374,7 +350,6 @@
                         <div class="custom-amount-input">
                             <span class="currency-symbol">₹</span>
                             <input type="number" id="customAmountInput" placeholder="Enter amount" min="1">
-                            <span class="per-month-indicator">/ month</span>
                         </div>
                     </div>
 
@@ -1038,9 +1013,6 @@
             const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
             const customAmountContainer = document.getElementById('customAmountContainer');
             
-            // Clear any custom amount value
-            document.getElementById('customAmountInput').value = '';
-            
             selectedAmountDisplay.classList.remove('show');
             customAmountContainer.classList.add('show');
             
@@ -1076,8 +1048,15 @@
                     if (amount === 'other') {
                         // Show custom amount input
                         showCustomAmountInput();
+                        
+                        // Check if custom amount already has value
+                        if (customAmountInput.value && parseInt(customAmountInput.value) > 0) {
+                            // Update selected amount display with custom amount
+                            const customAmount = parseInt(customAmountInput.value);
+                            updateSelectedAmountDisplay(customAmount);
+                        }
                     } else {
-                        // Hide custom input and show selected amount display
+                        // Update display with fixed amount
                         updateSelectedAmountDisplay(parseInt(amount));
                     }
                 });
@@ -1087,11 +1066,8 @@
             customAmountInput.addEventListener('input', function() {
                 const amount = parseInt(this.value);
                 if (!isNaN(amount) && amount > 0) {
-                    // Custom amount stays in input field, don't show selected amount display
-                    // Clear any selected donation options
-                    donationOptions.forEach(opt => opt.classList.remove('selected'));
-                    // Make sure the "Other" option is selected
-                    document.getElementById('other-option').classList.add('selected');
+                    // Update selected amount display with custom amount
+                    updateSelectedAmountDisplay(amount);
                 } else {
                     // If custom amount is cleared, hide the display
                     hideAllAmountDisplays();

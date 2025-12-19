@@ -137,118 +137,45 @@
             text-decoration: none;
         }
 
-        /* Selected Amount Display Styles - Improved Look & Feel */
+        /* Selected Amount Display Styles */
         .selected-amount-display {
             display: none;
-            background: linear-gradient(135deg, #f8e6e2 0%, #ffefeb 100%);
-            padding: 5px;
-            border-radius: 12px;
+            background-color: #f8e6e2;
+            padding: 20px;
+            border-radius: 8px;
             margin: 20px 0;
-            border: 2px solid #B04B34;
-            box-shadow: 0 4px 15px rgba(176, 75, 52, 0.1);
+            border-left: 4px solid #B04B34;
+            text-align: center;
         }
 
         .selected-amount-display.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            animation: fadeIn 0.3s ease-in-out;
+            display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .selected-amount-title {
+            font-size: 18px;
+            color: #B04B34;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .selected-amount-value {
-            font-size: 26px;
-            font-weight: 600;
-            color: #B04B34;
-            margin: 0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin: 10px 0;
         }
 
         .selected-amount-frequency {
-            font-size: 22px;
-            color: #8c3a2a;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        /* Custom Amount Container Styles */
-        .custom-amount-container {
-            display: none;
-            margin: 20px 0;
-        }
-
-        .custom-amount-container.show {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .custom-amount-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #333;
             font-size: 16px;
+            color: #666;
         }
 
-        .custom-amount-input {
-            display: flex;
-            align-items: center;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 5px;
-            transition: all 0.3s;
-            background: white;
-            position: relative;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .custom-amount-input:focus-within {
-            border-color: #B04B34;
-            box-shadow: 0 2px 15px rgba(176, 75, 52, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .currency-symbol {
-            font-size: 24px;
-            font-weight: 700;
-            color: #B04B34;
-            margin-right: 12px;
-        }
-
-        #customAmountInput {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 20px;
-            font-weight: 500;
-            padding-right: 90px;
-            color: #333;
-        }
-
-        #customAmountInput::placeholder {
-            color: #aaa;
-        }
-
-        .per-month-indicator {
-            position: absolute;
-            right: 20px;
-            color: #888;
-            font-size: 16px;
-            pointer-events: none;
-            font-weight: 500;
-        }
-
-        /* Donation Option Selection Styles */
-        .donation-option.selected {
-            border-color: #B04B34;
-            background-color: #f8e6e2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(176, 75, 52, 0.15);
+        .selected-amount-note {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -303,6 +230,14 @@
                 <div class="form-tabs">
                     <div class="tab active" data-step="1">Your gift</div>
                     <div class="tab" data-step="2">Your details</div>
+                </div>
+
+                <!-- Selected Amount Display -->
+                <div class="selected-amount-display" id="selectedAmountDisplay">
+                    <div class="selected-amount-title">Your Monthly Contribution</div>
+                    <div class="selected-amount-value" id="selectedAmountValue">₹500</div>
+                    <div class="selected-amount-frequency">per month</div>
+                    <div class="selected-amount-note">Thank you for your continuous support!</div>
                 </div>
 
                 <!-- Step 1: Donation Impact -->
@@ -362,19 +297,12 @@
                         </div>
                     </div>
 
-                    <!-- Fixed Amount Display (appears when fixed amounts are selected) -->
-                    <div class="selected-amount-display" id="selectedAmountDisplay">
-                        <div class="selected-amount-value" id="selectedAmountValue">₹500</div>
-                        <div class="selected-amount-frequency">/ month</div>
-                    </div>
-
                     <!-- Custom Amount Input -->
                     <div class="custom-amount-container" id="customAmountContainer">
                         <label class="custom-amount-label">Enter your custom amount:</label>
                         <div class="custom-amount-input">
                             <span class="currency-symbol">₹</span>
                             <input type="number" id="customAmountInput" placeholder="Enter amount" min="1">
-                            <span class="per-month-indicator">/ month</span>
                         </div>
                     </div>
 
@@ -761,7 +689,29 @@
                 </div>
             </div>
             <!-- Slide 1 -->
-            
+            <div class="slide">
+                <div class="card">
+                    <img src="images/hemant-jalan-24.jpeg" class="profile">
+                    <h2>Mr. Hemant Jalan</h2>
+                    <p class="sub">(BT/CHE/1977)</p>
+                    <p class="quote">
+                        "Whenever any of us is in a financial position to give back to the Institute, I think, he ought to because we owe that to the Institute that has given us so much."
+                    </p>
+                </div>
+            </div>
+    
+            <!-- Slide 2 -->
+            <div class="slide">
+                <div class="card">
+                    <img src="images/gopal-sutwala-24.jpeg" class="profile">
+                    <h2>Mr. Gopal Sutwala</h2>
+                    <p class="sub">(BT/CHE/1973)</p>
+                    <p class="quote">
+                        "I just wanted to give money for the treatment of the poor. I am happy that such a project (The Gangwal School of Medical Science & Technology) is coming up here (in IIT Kanpur) and it needs to be supported in any case. So, I am thankful."
+                    </p>
+                </div>
+            </div>
+        </div>
     
         <!-- Navigation buttons -->
         <button class="prev" onclick="moveSlide(-1)">❮</button>
@@ -1016,10 +966,9 @@
         });
 
         // Function to update selected amount display
-        function updateSelectedAmountDisplay(amount) {
+        function updateSelectedAmountDisplay(amount, isCustom = false) {
             const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
             const selectedAmountValue = document.getElementById('selectedAmountValue');
-            const customAmountContainer = document.getElementById('customAmountContainer');
             
             if (amount > 0) {
                 // Format the amount with Indian numbering system
@@ -1029,38 +978,19 @@
                 
                 selectedAmountValue.textContent = `₹${formattedAmount}`;
                 selectedAmountDisplay.classList.add('show');
-                customAmountContainer.classList.remove('show');
+            } else {
+                selectedAmountDisplay.classList.remove('show');
             }
-        }
-
-        // Function to show custom amount input
-        function showCustomAmountInput() {
-            const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
-            const customAmountContainer = document.getElementById('customAmountContainer');
-            
-            // Clear any custom amount value
-            document.getElementById('customAmountInput').value = '';
-            
-            selectedAmountDisplay.classList.remove('show');
-            customAmountContainer.classList.add('show');
-            
-            // Focus on custom amount input
-            document.getElementById('customAmountInput').focus();
-        }
-
-        // Function to hide all amount displays
-        function hideAllAmountDisplays() {
-            const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
-            const customAmountContainer = document.getElementById('customAmountContainer');
-            
-            selectedAmountDisplay.classList.remove('show');
-            customAmountContainer.classList.remove('show');
         }
 
         // Add event listeners to donation options
         document.addEventListener('DOMContentLoaded', function() {
             const donationOptions = document.querySelectorAll('.donation-option');
             const customAmountInput = document.getElementById('customAmountInput');
+            const customAmountContainer = document.getElementById('customAmountContainer');
+            
+            // Initially hide custom amount container
+            customAmountContainer.style.display = 'none';
             
             // Add click event to donation options
             donationOptions.forEach(option => {
@@ -1074,10 +1004,24 @@
                     const amount = this.getAttribute('data-amount');
                     
                     if (amount === 'other') {
-                        // Show custom amount input
-                        showCustomAmountInput();
+                        // Show custom amount container
+                        customAmountContainer.style.display = 'block';
+                        
+                        // Focus on custom amount input
+                        customAmountInput.focus();
+                        
+                        // Check if custom amount already has value
+                        if (customAmountInput.value && parseInt(customAmountInput.value) > 0) {
+                            updateSelectedAmountDisplay(parseInt(customAmountInput.value), true);
+                        } else {
+                            // Hide display if no custom amount entered
+                            document.getElementById('selectedAmountDisplay').classList.remove('show');
+                        }
                     } else {
-                        // Hide custom input and show selected amount display
+                        // Hide custom amount container for fixed amounts
+                        customAmountContainer.style.display = 'none';
+                        
+                        // Update display with fixed amount
                         updateSelectedAmountDisplay(parseInt(amount));
                     }
                 });
@@ -1087,14 +1031,9 @@
             customAmountInput.addEventListener('input', function() {
                 const amount = parseInt(this.value);
                 if (!isNaN(amount) && amount > 0) {
-                    // Custom amount stays in input field, don't show selected amount display
-                    // Clear any selected donation options
-                    donationOptions.forEach(opt => opt.classList.remove('selected'));
-                    // Make sure the "Other" option is selected
-                    document.getElementById('other-option').classList.add('selected');
+                    updateSelectedAmountDisplay(amount, true);
                 } else {
-                    // If custom amount is cleared, hide the display
-                    hideAllAmountDisplays();
+                    document.getElementById('selectedAmountDisplay').classList.remove('show');
                 }
             });
             
