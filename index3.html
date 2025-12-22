@@ -1,1120 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M.A.G.I.K. - Monthly Giving Program</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Payment Instructions Modal Styles */
-        .payment-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M.A.G.I.K. - Monthly Giving Program</title>
 
-        .payment-modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="style.css">
 
-        .payment-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #B04B34;
-            padding-bottom: 15px;
-        }
+<style>
 
-        .payment-modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #B04B34;
-            margin: 0;
-        }
+/* ================= PAN NOTE FIX (FULL WIDTH) ================= */
+.pan-wrapper{
+    width:100%;
+}
 
-        .close-modal {
-            font-size: 30px;
-            cursor: pointer;
-            color: #666;
-            background: none;
-            border: none;
-            padding: 0;
-            line-height: 1;
-        }
+.pan-note{
+    background:#fff8e1;
+    border:1px solid #ffeaa7;
+    border-left:4px solid #ffc107;
+    padding:12px 15px;
+    margin-top:8px;
+    border-radius:6px;
+    font-size:14px;
+    color:#856404;
+    display:none;
+    width:100%;
+    box-sizing:border-box;
+}
 
-        .close-modal:hover {
-            color: #B04B34;
-        }
+.pan-note.show{
+    display:block;
+    animation:fadeIn .3s ease-in-out;
+}
 
-        .payment-partner {
-            background-color: #f8e6e2;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #B04B34;
-        }
-
-        .payment-partner h4 {
-            color: #B04B34;
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .payment-steps {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .payment-steps h4 {
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .payment-steps ol {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .payment-steps li {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .note-box {
-            background-color: #fff8e1;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 0 8px 8px 0;
-            font-size: 14px;
-        }
-
-        .modal-flag {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .proceed-button {
-            padding: 10px 30px;
-            font-size: 16px;
-            background-color: #B04B34;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            transition: background-color 0.3s;
-        }
-
-        .proceed-button:hover {
-            background-color: #8c3a2a;
-            color: white;
-            text-decoration: none;
-        }
-
-        /* Selected Amount Display Styles */
-        .selected-amount-display {
-            display: none;
-            background-color: #f8e6e2;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #B04B34;
-        }
-
-        .selected-amount-display.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .selected-amount-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #333;
-            margin: 0;
-        }
-
-        .selected-amount-frequency {
-            font-size: 20px;
-            color: #666;
-            margin: 0;
-        }
-
-        /* Custom Amount Container Styles */
-        .custom-amount-container {
-            display: none;
-            margin: 20px 0;
-        }
-
-        .custom-amount-container.show {
-            display: block;
-        }
-
-        .custom-amount-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .custom-amount-input {
-            display: flex;
-            align-items: center;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            transition: border-color 0.3s;
-        }
-
-        .custom-amount-input:focus-within {
-            border-color: #B04B34;
-        }
-
-        .currency-symbol {
-            font-size: 20px;
-            font-weight: 600;
-            color: #B04B34;
-            margin-right: 10px;
-        }
-
-        #customAmountInput {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 18px;
-            font-weight: 500;
-        }
-
-        #customAmountInput::placeholder {
-            color: #999;
-        }
-    </style>
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(-6px);}
+    to{opacity:1;transform:translateY(0);}
+}
+</style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img src="images/IITK_logo.png" alt="Logo">
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#">Home</a></li>
-            <li><a href="#magik-about">About</a></li>
-            <li><a href="#team">Testimonials</a></li>
-            <li><a href="#faq">FAQs</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
 
-        <div class="hamburger" onclick="toggleMenu()">
-            ☰
-        </div>
-    </nav>
+<!-- ================= NAV ================= -->
+<nav class="navbar">
+    <div class="logo">
+        <img src="images/IITK_logo.png">
+    </div>
+</nav>
 
-    <!-- Payment Instructions Modal -->
-    <div id="paymentModal" class="payment-modal">
-        <div class="payment-modal-content">
-            <div class="payment-modal-header">
-                <h2 class="payment-modal-title" id="modalCountryTitle"></h2>
-                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
-            </div>
-            <div id="modalContent">
-                <!-- Content will be inserted here by JavaScript -->
-            </div>
-            <div class="note-box">
-                <strong>Note:</strong> You will be redirected to our secure payment partner's website to complete your donation.
-            </div>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="#" id="proceedButton" class="proceed-button" target="_blank">
-                    Proceed to Payment
-                </a>
-            </div>
-        </div>
+<!-- ================= FORM ================= -->
+<section class="form-section">
+<div class="donation-form-container">
+
+<div class="form-tabs">
+    <div class="tab active">Your gift</div>
+    <div class="tab">Your details</div>
+</div>
+
+<!-- ================= STEP 2 ================= -->
+<div class="form-step active">
+
+<h2>Your Information</h2>
+
+<form id="donationForm">
+
+<div class="form-group">
+<div class="section-title">Personal Information</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <input type="text" placeholder="Full Name *" required>
+    </div>
+    <div class="form-group">
+        <input type="email" placeholder="Email *" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <input type="tel" placeholder="Mobile Number *" pattern="[0-9]{10}" required>
     </div>
 
-    <section class="hero-section">
-        <div class="left-space"></div>
+    <!-- ===== PAN FIELD (FIXED) ===== -->
+    <div class="form-group pan-wrapper">
+        <input type="text"
+               id="panInput"
+               maxlength="10"
+               placeholder="PAN Number (Optional)"
+               style="text-transform:uppercase">
 
-        <!-- RIGHT FORM -->
-        <section class="form-section">
-            <!-- Donation Form -->
-            <div class="donation-form-container">
-                <!-- Tab Navigation -->
-                <div class="form-tabs">
-                    <div class="tab active" data-step="1">Your gift</div>
-                    <div class="tab" data-step="2">Your details</div>
-                </div>
+        <div class="pan-note" id="panNote">
+            Note: Enter PAN (mandatory) to receive the 80G certificate.
+        </div>
+    </div>
+</div>
 
-                <!-- Step 1: Donation Impact -->
-                <div id="step1" class="form-step active">
-                    <div class="step-header">
-                        <h2>Choose Your Impact</h2>
-                        <p>Select how your donation will help students over time</p>
-                    </div>
+</div>
 
-                    <div class="donation-options">
-                        <div class="donation-option" data-amount="500"
-                            data-description="Provides a cycle for student mobility">
-                            <img src="https://cdn-icons-png.flaticon.com/128/2972/2972185.png" alt="Cycle"
-                                class="option-icon">
-                            <div class="option-impact">Provides a cycle for student mobility</div>
-                            <div class="option-amount">₹500</div>
-                        </div>
-
-                        <div class="donation-option" data-amount="1000"
-                            data-description="Covers medical & wellness needs for students">
-                            <img src="https://cdn-icons-png.flaticon.com/128/2966/2966487.png" alt="Medical"
-                                class="option-icon">
-                            <div class="option-impact">Covers medical & wellness needs for students</div>
-                            <div class="option-amount">₹1,000</div>
-                        </div>
-
-                        <div class="donation-option" data-amount="2500"
-                            data-description="Pays hostel/mess fees or supports a laptop">
-                            <img src="https://cdn-icons-png.flaticon.com/128/2721/2721290.png" alt="Laptop"
-                                class="option-icon">
-                            <div class="option-impact">Pays hostel/mess fees or supports a laptop</div>
-                            <div class="option-amount">₹2,500</div>
-                        </div>
-
-                        <div class="donation-option" data-amount="5000"
-                            data-description="Enables competitions or sports participation">
-                            <img src="https://cdn-icons-png.flaticon.com/128/857/857455.png" alt="Sports"
-                                class="option-icon">
-                            <div class="option-impact">Enables competitions or sports participation</div>
-                            <div class="option-amount">₹5,000</div>
-                        </div>
-
-                        <div class="donation-option" data-amount="10000"
-                            data-description="Funds research or travel grants">
-                            <img src="https://cdn-icons-png.flaticon.com/128/684/684809.png" alt="Research"
-                                class="option-icon">
-                            <div class="option-impact">Funds research or travel grants</div>
-                            <div class="option-amount">₹10,000</div>
-                        </div>
-
-                        <div class="donation-option other-option" id="other-option" data-amount="other"
-                            data-description="Your custom amount will support student needs based on urgency">
-                            <img src="https://cdn-icons-png.flaticon.com/128/1828/1828919.png" alt="Other"
-                                class="option-icon">
-                            <div class="option-impact">Enter your own amount</div>
-                            <div class="option-amount">Other</div>
-                        </div>
-                    </div>
-
-                    <!-- Fixed Amount Display (appears when fixed amounts are selected) -->
-                    <div class="selected-amount-display" id="selectedAmountDisplay">
-                        <div class="selected-amount-value" id="selectedAmountValue">₹500</div>
-                        <div class="selected-amount-frequency">per month</div>
-                    </div>
-
-                    <!-- Custom Amount Input -->
-                    <div class="custom-amount-container" id="customAmountContainer">
-                        <label class="custom-amount-label">Enter your custom amount:</label>
-                        <div class="custom-amount-input">
-                            <span class="currency-symbol">₹</span>
-                            <input type="number" id="customAmountInput" placeholder="Enter amount" min="1">
-                        </div>
-                    </div>
-
-                    <!-- Country Selection -->
-                    <div class="country-select-container">
-                        <h3 class="text-center">Select Country</h3>
-                        <div class="dropdown country-dropdown">
-                            <div class="dropdown-selected">Choose Country</div>
-                            <div class="dropdown-options">
-                                <div class="option" data-value="india">🇮🇳 India</div>
-                                <div class="option" data-value="usa">🇺🇸 United States</div>
-                                <div class="option" data-value="australia">🇦🇺 Australia</div>
-                                <div class="option" data-value="uk">🇬🇧 United Kingdom</div>
-                                <div class="option" data-value="canada">🇨🇦 Canada</div>
-                                <div class="option" data-value="germany">🇩🇪 Germany</div>
-                                <div class="option" data-value="belgium">🇧🇪 Belgium</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="info-note">
-                        <strong>Note:</strong> These amounts reflect the most common needs of students. Your donation
-                        will go towards supporting their most urgent requirements.
-                    </div>
-
-                    <div class="form-actions" style="display:flex; justify-content:center; margin-top:20px;">
-                        <button class="btn btn-next" id="nextButton" style="padding:15px 40px; font-size:18px;">
-                            Next →
-                        </button>
-                    </div>
-                    
-                </div>
-
-                <!-- Step 2: Personal Details -->
-                <div id="step2" class="form-step">
-                    <div class="step-header">
-                        <h2>Your Information</h2>
-                        <p>Please provide your details to complete the donation</p>
-                    </div>
-
-                    <!-- Updated Donation Form: Labels Removed & Asterisks Added in Placeholders -->
-                    <form id="donationForm">
-                        <!-- Personal Information -->
-                        <div class="form-group">
-                            <div class="section-title">Personal Information</div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <input type="text" name="name" placeholder="Full Name *" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" name="email" placeholder="Email *" required>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="Mobile Number *"
-                                        required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="pannumber" id="panInput" maxlength="10"
-                                        placeholder="PAN Number (Optional)" style="text-transform: uppercase">
-                                    <div class="pan-note" id="panNote">Note: Enter PAN (mandatory) to receive the 80G
-                                        certificate.</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Alumni Information -->
-                        <div class="form-group">
-                            <!-- Affiliation Dropdown -->
-                            <div class="dropdown affiliation-dropdown">
-                                <div class="dropdown-selected">Affiliation *</div>
-                                <div class="dropdown-options">
-                                    <div class="option" data-value="alumni">Alumni</div>
-                                    <div class="option" data-value="non-alumni">Non-Alumni</div>
-                                    <div class="option" data-value="organization">Organization</div>
-                                </div>
-                            </div>
-
-                            <div id="alumniFields" class="conditional-field">
-                                <div class="form-row mt-4">
-                                    <!-- Program Dropdown -->
-                                    <div class="dropdown program-dropdown">
-                                        <div class="dropdown-selected">Select Program *</div>
-                                        <div class="dropdown-options">
-                                            <div class="option" data-value="B.TECH">B.TECH</div>
-                                            <div class="option" data-value="M.TECH">M.TECH</div>
-                                            <div class="option" data-value="Ph.D">Ph.D</div>
-                                            <div class="option" data-value="MBA">MBA</div>
-                                            <div class="option" data-value="M.Sc">M.Sc</div>
-                                            <div class="option" data-value="B.Sc">B.Sc</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Department Dropdown -->
-                                    <div class="dropdown department-dropdown">
-                                        <div class="dropdown-selected">Select Department *</div>
-                                        <div class="dropdown-options">
-                                            <!-- Department List -->
-                                            <div class="option">Aerospace Engineering</div>
-                                            <div class="option">Biological Sciences and Bio Engg</div>
-                                            <div class="option">Civil Engineering</div>
-                                            <div class="option">Chemistry</div>
-                                            <div class="option">Cognitive Science</div>
-                                            <div class="option">Chemical Engineering</div>
-                                            <div class="option">Computer Science & Engineering</div>
-                                            <div class="option">Design Programme</div>
-                                            <div class="option">Earth Sciences</div>
-                                            <div class="option">Economic Sciences</div>
-                                            <div class="option">Electrical Engineering</div>
-                                            <div class="option">Environmental Engineering</div>
-                                            <div class="option">Geological Technology</div>
-                                            <div class="option">Humanities & Social Sciences</div>
-                                            <div class="option">Industrial & Management Engg</div>
-                                            <div class="option">Laser Technology</div>
-                                            <div class="option">Materials Science & Engineering</div>
-                                            <div class="option">Materials and Metallurgical Engineering</div>
-                                            <div class="option">Materials Science Programme</div>
-                                            <div class="option">Mathematics</div>
-                                            <div class="option">Mathematics and Statistics</div>
-                                            <div class="option">Master's in Design</div>
-                                            <div class="option">Mechanical Engineering</div>
-                                            <div class="option">Nuclear Engg. & Technology</div>
-                                            <div class="option">Physics</div>
-                                            <div class="option">Photonics Science and Engineering Programme</div>
-                                            <div class="option">Statistics</div>
-                                            <div class="option">Space Science and Astronomy</div>
-                                            <div class="option">Sustainable Energy Engineering</div>
-                                            <div class="option">Accounting</div>
-                                            <div class="option">Finance</div>
-                                            <div class="option">Computing</div>
-                                            <div class="option">Business Communication</div>
-                                            <div class="option">Marketing</div>
-                                            <div class="option">Economics</div>
-                                            <div class="option">Business Statistics</div>
-                                            <div class="option">Organizational Behavior & HRM</div>
-
-                                            <!-- E-Masters -->
-                                            <div class="option">E-Masters in Next Generation Wireless Technologies</div>
-                                            <div class="option">E-Masters in Business Finance</div>
-                                            <div class="option">E-Masters in Financial Technology and Management</div>
-                                            <div class="option">E-Masters in Public Policy</div>
-                                            <div class="option">E-Masters in Data Science and Business Analytics</div>
-                                            <div class="option">E-Masters in Cyber Security</div>
-                                            <div class="option">E-Masters in Artificial Intelligence and Machine
-                                                Learning</div>
-                                            <div class="option">E-Masters in Climate Finance and Sustainability</div>
-                                            <div class="option">E-Masters in Quantitative Finance and Risk Management
-                                            </div>
-                                            <div class="option">E-Masters in Sustainable Construction Practices and
-                                                Project Management</div>
-                                            <div class="option">E-Masters in Business Leadership in the Digital Age
-                                            </div>
-                                            <div class="option">E-Masters in Financial Analysis</div>
-                                            <div class="option">E-Masters in Power Sector Regulation, Economics and
-                                                Finance</div>
-                                            <div class="option">E-Masters in Renewable Energy and e-Mobility</div>
-
-                                            <div class="option">Others</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-row mt-4">
-                                    <!-- Year of Graduation Dropdown -->
-                                    <div class="dropdown yog-dropdown">
-                                        <div class="dropdown-selected">Year of Graduation *</div>
-                                        <div class="dropdown-options" id="yog-options">
-                                            <!-- Options will be populated by JavaScript -->
-                                        </div>
-                                    </div>
-
-                                    <!-- Roll Number -->
-                                    <div class="form-group">
-                                        <input type="text" name="roll_no" placeholder="Roll Number">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Receipt Preferences -->
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label class="required">Mark this donation as Anonymous?</label>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="anonymous" value="Yes">
-                                        <span class="radio-label">Yes</span>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="anonymous" value="No" checked>
-                                        <span class="radio-label">No</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-prev" onclick="switchTab(1)">← Previous</button>
+<div class="form-actions">
 <button type="submit" class="btn btn-submit"
-        style="padding:15px 40px; font-size:18px; border-radius:8px;">
-    Pay Now
-</button>                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </section>
+style="padding:15px 40px;font-size:18px;border-radius:8px;">
+Pay Now
+</button>
+</div>
 
-    <!-- Donate Now Buttons -->
-    <button class="donate-now-btn desktop-donate-btn" id="desktopDonateBtn">Donate Now</button>
-    <button class="mobile-donate-btn" id="mobileDonateBtn">Donate Now</button>
-    
-    <!---------------About-->
-    <section id="magik-about" class="magik-section mb-4">
-        <div class="container">
-            <h2 class="magik-title">What is <span>M.A.G.I.K.?</span></h2>
+</form>
+</div>
+</div>
+</section>
 
-            <p class="magik-text">
-                Welcome to M.A.G.I.K., the monthly giving program for IIT Kanpur alumni. Through M.A.G.I.K., alumni have
-                an opportunity
-                to support their alma mater on a regular basis. This voluntary effort aims to benefit future students
-                and enhance the
-                overall impact of the institution.
-            </p>
+<!-- ================= SCRIPT ================= -->
+<script>
+document.addEventListener("DOMContentLoaded",function(){
 
-            <p class="magik-text">
-                Join us in making a difference today. Let's empower a generation of innovators at IIT Kanpur through
-                consistent monthly giving.
-            </p>
-        </div>
-    </section>
-    <!--------end about-->
-    
-    <section id="team" class="team section bg-white">
-        <div class="container section-title text-center mt-4" style="padding-bottom:0px;">
-            <h2 style="
-    font-family: 'Raleway', sans-serif;
-    font-size: 38px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.4;
-    margin: 40px 0;
-">
-    <i>
-        <span style="color:#B04B34;">Small</span> 
-        <span style="color:#000;">regular contributions</span>
-        <span style="color:#B04B34;"> today,</span>
-        <br>
-        <span style="color:#B04B34;">create a</span> 
-        <span style="color:#000;">big impact</span> 
-        <span style="color:#B04B34;">tomorrow!</span>
-    </i>
-</h2>
-        </div>
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-lg-12 col-md-12 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                    <div class="team-member-1">
-                        <div class="member-img">
-                            <img src="images/monthly-1 (1).png" class="img-fluid" alt="">
-                        </div>
-                    </div>
-                </div><!-- End Team Member -->
-                <div class="col-lg-12 col-md-12 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                    <div class="team-member-1">
-                        <div class="member-img">
-                            <img src="images/monthly-2.jpeg" class="img-fluid" alt="">
-                        </div>
-                    </div>
-                </div>
-                <p style="
-  text-align:center;
-  background:#f8e6e2;
-  color:#B04B34;
-  padding:12px 18px;
-  border-left:5px solid #B04B34;
-  display:inline-block;
-  font-weight:600;
-  border-radius:6px;
-  font-size:1rem;
-">
-  PLEASE NOTE : The amount mentioned above is for illustrative purposes only 
-  and does not include the interest that will accumulate over the years.
-</p>
-            </div>
-        </div>
-    </section>
-    
-    <!----------------Six reasons-->
-    <section class="reasons-section">
-        <div class="container">
-            <h2 class="reasons-title">
-                Six Reasons to <span>Give Monthly</span>
-            </h2>
-    
-            <div class="reasons-grid">
-                <!-- Card 1 -->
-                <div class="reason-card">
-                    <img src="images/sustained.png" class="reason-icon">
-                    <div>
-                        <h3>Sustained Impact</h3>
-                        <p>
-                            Your monthly contributions give consistent support for ongoing initiatives at IITK.
-                        </p>
-                    </div>
-                </div>
-    
-                <!-- Card 2 -->
-                <div class="reason-card">
-                    <img src="images/convenience.png" class="reason-icon">
-                    <div>
-                        <h3>Convenience</h3>
-                        <p>
-                            Set up your donation once and let it run automatically, saving you time and effort.
-                        </p>
-                    </div>
-                </div>
-    
-                <!-- Card 3 -->
-                <div class="reason-card">
-                    <img src="images/legacy-24.png" class="reason-icon">
-                    <div>
-                        <h3>Build a Legacy</h3>
-                        <p>
-                            Contribute to a fund that creates lasting benefits for IITK students and the community.
-                        </p>
-                    </div>
-                </div>
-    
-                <!-- Card 4 -->
-                <div class="reason-card">
-                    <img src="images/flexibility.png" class="reason-icon">
-                    <div>
-                        <h3>Flexibility</h3>
-                        <p>
-                            Adjust your contribution amount or cancel anytime, giving you full control over your giving.
-                        </p>
-                    </div>
-                </div>
-    
-                <!-- Card 5 -->
-                <div class="reason-card">
-                    <img src="images/tax.png" class="reason-icon">
-                    <div>
-                        <h3>Tax Benefits</h3>
-                        <p>
-                            Get 100% tax benefits for your monthly contributions.
-                        </p>
-                    </div>
-                </div>
-    
-                <!-- Card 6 -->
-                <div class="reason-card">
-                    <img src="images/updates.png" class="reason-icon">
-                    <div>
-                        <h3>Exclusive Updates</h3>
-                        <p>
-                            Receive regular updates and stay connected to IITK.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-----------Testimonials-->
-    <div id="test" class="testimonial-slider">
-        <h2 class="testimonial-title">
-           The spirit of <span>Giving Back</span>
-        </h2>
-        <div class="slides">
-            <!-- Slide 3 -->
-            <div class="slide">
-                <div class="card">
-                    <img src="varun.jpeg" class="profile">
-                    <h2>Mr. Varun Mishra</h2>
-                    <p class="sub">(Y6, CSE Btech-MTech dual )</p>
-                    <p class="quote">
-                        "MAGIK is a great initiative for younger alumni to contribute towards the needs of IITK students through monthly contributions. While lump-sum donations are aimed at big projects/scholarships, MAGIK helps cast a wider net and makes alumni like me feel connected to the community and experience the joy of giving back to our beloved Alma Mater. "
-                    </p>
-                </div>
-            </div>
-            <!-- Slide 1 -->
-            
-    
-        <!-- Navigation buttons -->
-        <button class="prev" onclick="moveSlide(-1)">❮</button>
-        <button class="next" onclick="moveSlide(1)">❯</button>
-    </div>
-    
-    <!------------FAQS-->
-    <section id="faq">
-        <div class="container">
-            <h2 class="faq-title">
-                Frequently Asked Questions
-            </h2>
-    
-            <div class="faq-grid">
-                <!-- LEFT COLUMN -->
-                <div class="faq-col">
-                    <!-- ITEM -->
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            How do I make a monthly donation?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            To set up a recurring donation, visit the MAGIK page and click "Donate".
-                            Select "Recurring", choose the amount & frequency, then verify your bank details.
-                        </div>
-                    </div>
-    
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            How can I update my credit card details if my card is expired?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            You will need to reactivate your recurring donation with new card details.
-                        </div>
-                    </div>
-    
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            Where does my money go?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            Your donations support scholarships, research, infrastructure, and student programs at IIT Kanpur.
-                        </div>
-                    </div>
-    
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            When will my donation be deducted?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            Your donation is deducted monthly on the same date you initiated the recurring payment.
-                        </div>
-                    </div>
-                </div>
-    
-                <!-- RIGHT COLUMN -->
-                <div class="faq-col">
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            What are the tax benefits and when can I get my receipt?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            Donations are 100% tax-deductible. Indian receipts are issued in April; US receipts in January.
-                        </div>
-                    </div>
-    
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            When will my name be reflected on the wall of donors?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            After your payment is received in our account (usually 4–5 working days).
-                        </div>
-                    </div>
-    
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            How can I cancel my donation?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            Indian donors can cancel via bank net banking (subscriptions section).
-                            US donors can cancel via the Zeffy link.
-                        </div>
-                    </div>
-    
-                    <div class="faq-item">
-                        <div class="faq-question">
-                            Can I get one combined receipt for all my donations this year?
-                            <span class="faq-icon">+</span>
-                        </div>
-                        <div class="faq-answer">
-                            Monthly donors receive a cumulative annual receipt. One-time donations have individual receipts only.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <section id="contact" class="contact-note">
-        <p>
-            NOTE : For more questions related to your donations, please reach out to: dora@dean.iitk.ac.in        </p>
-    </section>
+const panInput=document.getElementById("panInput");
+const panNote=document.getElementById("panNote");
 
-    <script src="script.js"></script>
-    <script>
-        // Payment Partner Links (Replace with actual links)
-        const paymentLinks = {
-            'usa': 'https://www.zeffy.com/en-US/donation-form/bb809edf-3a48-4fec-931b-18fcbee7da40', // Example link for USA
-            'uk': 'https://donate.justgiving.com/charity/eff-iitkanpur/donation-amount',    // Example link for UK
-            'australia': 'https://myriadau.fcsuite.com/erp/donate/create/fund?funit_id=1128',  // Example link for Australia
-            'canada': 'https://www.canadahelps.org/en/charities/myriad-canada/campaign/h502-support-education-research-and-access-to-healthcare-with-the-iit-kanpur/#create-a-campaign',     // Example link for Canada
-            'germany': 'https://donate.transnationalgiving.eu/germany/IITKanpur', // Example link for Germany
-            'belgium': 'https://donate.kbs-frb.be/actions/EFF-IITKanpurUniversity'     // Example link for Belgium
-        };
+panInput.addEventListener("focus",()=>{
+    panNote.classList.add("show");
+});
 
-        // Payment Modal Functions
-        function openPaymentModal(country, countryName) {
-            const modal = document.getElementById('paymentModal');
-            const modalTitle = document.getElementById('modalCountryTitle');
-            const modalContent = document.getElementById('modalContent');
-            const proceedButton = document.getElementById('proceedButton');
-            
-            let content = '';
-            let paymentLink = paymentLinks[country] || '#';
-            
-            // Set content based on country
-            switch(country) {
-                case 'usa':
-                    modalTitle.innerHTML = '🇺🇸 United States Payment Instructions';
-                    content = `
-                        
-                        <div class="payment-steps">
-                            <h4>Steps:</h4>
-                            <ol>
-                                <li>Enter amount: $15 / $30 / $60 / $120.</li>
-                                <li>Enter your details and Complete Payment</li>
-                            </ol>
-                           
-                        </div>
-                    `;
-                    break;
-                    
-                case 'uk':
-                    modalTitle.innerHTML = '🇬🇧 United Kingdom Payment Instructions';
-                    content = `
-                        
-                        <div class="payment-steps">
-                            <h4>Steps:</h4>
-                            <ol>
-                                <li>Select "Monthly" Option</li>
-                                <li>Enter amount: £30 / £50 / £150 / £200.</li>
-                                <li>Enter your details and Complete Payment</li>
-                            </ol>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'australia':
-                    modalTitle.innerHTML = '🇦🇺 Australia Payment Instructions';
-                    content = `
-                        <div class="payment-steps">
-                            <h4>Steps:</h4>
-                            <ol>
-                                <li>Select "Recurring Donation Amount."</li>
-                                <li>Enter amount and End date.</li>
-                                <li>Enter your details and Complete Payment</li>
-                            </ol>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'canada':
-                    modalTitle.innerHTML = '🇨🇦 Canada Payment Instructions';
-                    content = `
-                        
-                        <div class="payment-steps">
-                            <h4>Steps:</h4>
-                            <ol>
-                                <li>Select "Donate Monthly"</li>
-                                <li>Enter amount</li>
-                                <li>Enter your details and Complete Payment</li>
-                            </ol>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'germany':
-                    modalTitle.innerHTML = '🇩🇪 Germany Payment Instructions';
-                    content = `
-                       
-                        <div class="payment-steps">
-                            <h4>Steps:</h4>
-                            <ol>
-                                <li>Select "Donate every month."</li>
-                                <li>Enter amount: €50 / €80 / €100 / €250.</li>
-                                <li>Enter your details and Complete Payment</li>
-                            </ol>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'belgium':
-                    modalTitle.innerHTML = '🇧🇪 Belgium Payment Instructions';
-                    content = `
-                       
-                        <div class="payment-steps">
-                            <h4>Steps:</h4>
-                            <ol>
-                                <li>Select "Don Mensuel/ I Donate every month."</li>
-                                <li>Enter Amount</li>
-                                <li>Enter your details and Complete Payment</li>
-                            </ol>
-                        </div>
-                    `;
-                    break;
-                    
-                default:
-                    // For India, don't show modal
-                    return;
-            }
-            
-            modalContent.innerHTML = content;
-            proceedButton.href = paymentLink;
-            modal.style.display = 'flex';
-        }
-        
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('paymentModal');
-            if (event.target == modal) {
-                closePaymentModal();
-            }
-        }
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closePaymentModal();
-            }
-        });
+panInput.addEventListener("input",()=>{
+    panNote.classList.add("show");
+});
 
-        // Function to update selected amount display
-        function updateSelectedAmountDisplay(amount) {
-            const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
-            const selectedAmountValue = document.getElementById('selectedAmountValue');
-            const customAmountContainer = document.getElementById('customAmountContainer');
-            
-            if (amount > 0) {
-                // Format the amount with Indian numbering system
-                const formattedAmount = new Intl.NumberFormat('en-IN', {
-                    maximumFractionDigits: 0
-                }).format(amount);
-                
-                selectedAmountValue.textContent = `₹${formattedAmount}`;
-                selectedAmountDisplay.classList.add('show');
-                customAmountContainer.classList.remove('show');
-            }
-        }
+panInput.addEventListener("blur",()=>{
+    if(!panInput.value.trim()){
+        setTimeout(()=>{
+            panNote.classList.remove("show");
+        },200);
+    }
+});
+});
+</script>
 
-        // Function to show custom amount input
-        function showCustomAmountInput() {
-            const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
-            const customAmountContainer = document.getElementById('customAmountContainer');
-            
-            selectedAmountDisplay.classList.remove('show');
-            customAmountContainer.classList.add('show');
-            
-            // Focus on custom amount input
-            document.getElementById('customAmountInput').focus();
-        }
-
-        // Function to hide all amount displays
-        function hideAllAmountDisplays() {
-            const selectedAmountDisplay = document.getElementById('selectedAmountDisplay');
-            const customAmountContainer = document.getElementById('customAmountContainer');
-            
-            selectedAmountDisplay.classList.remove('show');
-            customAmountContainer.classList.remove('show');
-        }
-
-        // Add event listeners to donation options
-        document.addEventListener('DOMContentLoaded', function() {
-            const donationOptions = document.querySelectorAll('.donation-option');
-            const customAmountInput = document.getElementById('customAmountInput');
-            
-            // Add click event to donation options
-            donationOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove selected class from all options
-                    donationOptions.forEach(opt => opt.classList.remove('selected'));
-                    
-                    // Add selected class to clicked option
-                    this.classList.add('selected');
-                    
-                    const amount = this.getAttribute('data-amount');
-                    
-                    if (amount === 'other') {
-                        // Show custom amount input
-                        showCustomAmountInput();
-                        
-                        // Check if custom amount already has value
-                        if (customAmountInput.value && parseInt(customAmountInput.value) > 0) {
-                            // Update selected amount display with custom amount
-                            const customAmount = parseInt(customAmountInput.value);
-                            updateSelectedAmountDisplay(customAmount);
-                        }
-                    } else {
-                        // Update display with fixed amount
-                        updateSelectedAmountDisplay(parseInt(amount));
-                    }
-                });
-            });
-            
-            // Add input event to custom amount input
-            customAmountInput.addEventListener('input', function() {
-                const amount = parseInt(this.value);
-                if (!isNaN(amount) && amount > 0) {
-                    // Update selected amount display with custom amount
-                    updateSelectedAmountDisplay(amount);
-                } else {
-                    // If custom amount is cleared, hide the display
-                    hideAllAmountDisplays();
-                }
-            });
-            
-            // Add event listeners to country dropdown options
-            const countryOptions = document.querySelectorAll('.country-dropdown .option');
-            countryOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const country = this.getAttribute('data-value');
-                    const countryText = this.textContent;
-                    
-                    // Only show modal for specific countries (not India)
-                    if (['usa', 'uk', 'australia', 'canada', 'germany', 'belgium'].includes(country)) {
-                        openPaymentModal(country, countryText);
-                    }
-                });
-            });
-            
-            // Also trigger modal when country is selected from dropdown
-            const countrySelected = document.querySelector('.country-dropdown .dropdown-selected');
-            if (countrySelected) {
-                // Monitor changes to the selected country
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'characterData' || mutation.type === 'childList') {
-                            const selectedText = countrySelected.textContent;
-                            const countryMap = {
-                                '🇺🇸 United States': 'usa',
-                                '🇬🇧 United Kingdom': 'uk',
-                                '🇦🇺 Australia': 'australia',
-                                '🇨🇦 Canada': 'canada',
-                                '🇩🇪 Germany': 'germany',
-                                '🇧🇪 Belgium': 'belgium'
-                            };
-                            
-                            // Check if the selected country is in our map
-                            for (const [displayName, countryCode] of Object.entries(countryMap)) {
-                                if (selectedText.includes(displayName.substring(2))) {
-                                    setTimeout(() => {
-                                        openPaymentModal(countryCode, displayName);
-                                    }, 300); // Small delay to ensure dropdown is closed
-                                    break;
-                                }
-                            }
-                        }
-                    });
-                });
-                
-                observer.observe(countrySelected, {
-                    childList: true,
-                    characterData: true,
-                    subtree: true
-                });
-            }
-        });
-    </script>
 </body>
-
 </html>

@@ -250,6 +250,110 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(176, 75, 52, 0.15);
         }
+
+        /* NEW: PAN Input with Tooltip Styles */
+        .pan-input-container {
+            position: relative;
+        }
+
+        .pan-input-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .pan-tooltip-icon {
+            position: absolute;
+            right: 12px;
+            background: #B04B34;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: help;
+            z-index: 10;
+        }
+
+        .pan-tooltip {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: #333;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 280px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .pan-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            right: 15px;
+            border-width: 0 8px 8px 8px;
+            border-style: solid;
+            border-color: transparent transparent #333 transparent;
+        }
+
+        .pan-tooltip-icon:hover + .pan-tooltip,
+        .pan-tooltip-icon:focus + .pan-tooltip,
+        #panInput:focus ~ .pan-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #panInput {
+            padding-right: 40px !important;
+        }
+
+        /* Alternative: Floating Label Style */
+        .pan-floating-note {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            font-size: 12px;
+            color: #666;
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            display: none;
+            z-index: 5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #panInput:focus + .pan-floating-note {
+            display: block;
+        }
+
+        /* Alternative: Inline Note that appears on focus */
+        .pan-inline-note {
+            display: none;
+            font-size: 13px;
+            color: #B04B34;
+            margin-top: 5px;
+            padding-left: 10px;
+            border-left: 3px solid #B04B34;
+            background: #f8e6e2;
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        #panInput:focus ~ .pan-inline-note {
+            display: block;
+        }
     </style>
 </head>
 
@@ -435,11 +539,23 @@
                                     <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="Mobile Number *"
                                         required>
                                 </div>
-                                <div class="form-group">
-                                    <input type="text" name="pannumber" id="panInput" maxlength="10"
-                                        placeholder="PAN Number (Optional)" style="text-transform: uppercase">
-                                    <div class="pan-note" id="panNote">Note: Enter PAN (mandatory) to receive the 80G
-                                        certificate.</div>
+                                <div class="form-group pan-input-container">
+                                    <div class="pan-input-wrapper">
+                                        <input type="text" name="pannumber" id="panInput" maxlength="10"
+                                            placeholder="PAN Number (Optional)" style="text-transform: uppercase">
+                                        <div class="pan-tooltip-icon" tabindex="0">i</div>
+                                        <div class="pan-tooltip">
+                                            <strong>Note:</strong> Enter PAN (mandatory) to receive the 80G certificate.
+                                        </div>
+                                        <!-- Alternative: Floating note -->
+                                        <div class="pan-floating-note">
+                                            Enter PAN for 80G certificate
+                                        </div>
+                                        <!-- Alternative: Inline note -->
+                                        <div class="pan-inline-note">
+                                            Note: Enter PAN (mandatory) to receive the 80G certificate.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1146,6 +1262,17 @@
                     childList: true,
                     characterData: true,
                     subtree: true
+                });
+            }
+            
+            // NEW: Add keyboard navigation for tooltip
+            const panTooltipIcon = document.querySelector('.pan-tooltip-icon');
+            if (panTooltipIcon) {
+                panTooltipIcon.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.focus();
+                    }
                 });
             }
         });

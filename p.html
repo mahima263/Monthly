@@ -250,6 +250,200 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(176, 75, 52, 0.15);
         }
+
+        /* NEW: PAN Input with Tooltip Styles - HOVER ONLY */
+        .pan-input-container {
+            position: relative;
+        }
+
+        .pan-input-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .pan-tooltip-icon {
+            position: absolute;
+            right: 12px;
+            background: #383535;
+            color: white;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: help;
+            z-index: 10;
+            /* Remove tabindex and focus styles */
+            outline: none;
+            pointer-events: auto;
+        }
+
+        /* Remove focus styles from icon */
+        .pan-tooltip-icon:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .pan-tooltip {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: #333;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 280px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .pan-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            right: 15px;
+            border-width: 0 8px 8px 8px;
+            border-style: solid;
+            border-color: transparent transparent #333 transparent;
+        }
+
+        /* HOVER ONLY - remove focus from this rule */
+        .pan-tooltip-icon:hover + .pan-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Keep input focus tooltip if you want */
+        #panInput:focus ~ .pan-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #panInput {
+            padding-right: 40px !important;
+        }
+
+        /* Remove focus outline from icon */
+        .pan-tooltip-icon {
+            outline: none;
+        }
+
+        /* FAQ Section Styles */
+        #faq {
+            padding: 60px 20px;
+            background-color: #f9f9f9;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .faq-title span {
+            color: #B04B34;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .faq-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid #eaeaea;
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .faq-question:hover {
+            background-color: #f8f8f8;
+        }
+
+        .faq-icon {
+            font-size: 24px;
+            font-weight: 400;
+            color: #B04B34;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: white;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px 25px;
+            max-height: 500px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .faq-title {
+                font-size: 28px;
+            }
+            
+            .faq-question {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+            
+            .faq-answer {
+                padding: 0 20px;
+            }
+            
+            .faq-item.active .faq-answer {
+                padding: 15px 20px;
+            }
+        }
     </style>
 </head>
 
@@ -435,11 +629,15 @@
                                     <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="Mobile Number *"
                                         required>
                                 </div>
-                                <div class="form-group">
-                                    <input type="text" name="pannumber" id="panInput" maxlength="10"
-                                        placeholder="PAN Number (Optional)" style="text-transform: uppercase">
-                                    <div class="pan-note" id="panNote">Note: Enter PAN (mandatory) to receive the 80G
-                                        certificate.</div>
+                                <div class="form-group pan-input-container">
+                                    <div class="pan-input-wrapper">
+                                        <input type="text" name="pannumber" id="panInput" maxlength="10"
+                                            placeholder="PAN Number (Optional)" style="text-transform: uppercase">
+                                        <div class="pan-tooltip-icon">i</div>
+                                        <div class="pan-tooltip">
+                                            <strong>Note:</strong> Enter PAN (mandatory) to receive the 80G certificate.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -764,8 +962,7 @@
             
     
         <!-- Navigation buttons -->
-        <button class="prev" onclick="moveSlide(-1)">❮</button>
-        <button class="next" onclick="moveSlide(1)">❯</button>
+        
     </div>
     
     <!------------FAQS-->
@@ -1057,6 +1254,28 @@
             customAmountContainer.classList.remove('show');
         }
 
+        // FAQ Toggle Functionality
+        function initializeFAQ() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    // Get the parent faq-item
+                    const faqItem = question.closest('.faq-item');
+                    
+                    // Toggle active class
+                    faqItem.classList.toggle('active');
+                    
+                    // Close other FAQ items if needed (optional)
+                    // faqQuestions.forEach(otherQuestion => {
+                    //     if (otherQuestion !== question) {
+                    //         otherQuestion.closest('.faq-item').classList.remove('active');
+                    //     }
+                    // });
+                });
+            });
+        }
+
         // Add event listeners to donation options
         document.addEventListener('DOMContentLoaded', function() {
             const donationOptions = document.querySelectorAll('.donation-option');
@@ -1148,8 +1367,28 @@
                     subtree: true
                 });
             }
+            
+            // NEW: Prevent click on PAN tooltip icon
+            const panTooltipIcon = document.querySelector('.pan-tooltip-icon');
+            if (panTooltipIcon) {
+                panTooltipIcon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+                
+                // Also prevent focus on click
+                panTooltipIcon.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                });
+                
+                // Make sure icon is not focusable
+                panTooltipIcon.removeAttribute('tabindex');
+            }
+            
+            // Initialize FAQ functionality
+            initializeFAQ();
         });
-    </script>
+    </script> 
 </body>
 
 </html>
